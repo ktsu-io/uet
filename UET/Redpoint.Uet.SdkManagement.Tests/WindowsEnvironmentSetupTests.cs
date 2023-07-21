@@ -42,7 +42,7 @@ namespace TestNamespace
         [SupportedOSPlatform("windows")]
         public async Task CanParseVersionsFromUnrealCSharp()
         {
-            var versions = await WindowsSdkSetup.ParseVersions(
+            var versions = await WindowsAutoSdkSetup.ParseVersions(
                 _microsoftPlatformSdkCodeFragment);
 
             Assert.Equal("10.0.18362.0", versions.windowsSdkPreferredVersion);

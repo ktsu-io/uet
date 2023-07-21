@@ -7,16 +7,16 @@
     using System.Text.RegularExpressions;
 
     [SupportedOSPlatform("macos")]
-    public class MacSdkSetup : ISdkSetup
+    public class MacManualSdkSetup : IManualSdkSetup
     {
         private readonly IProcessExecutor _processExecutor;
 
-        public MacSdkSetup(IProcessExecutor processExecutor)
+        public MacManualSdkSetup(IProcessExecutor processExecutor)
         {
             _processExecutor = processExecutor;
         }
 
-        public string PlatformName => "Mac";
+        public string[] PlatformNames => new[] { "Mac", "IOS" };
 
         internal static Task<string> ParseXcodeVersion(string applePlatformSdk)
         {
@@ -185,7 +185,7 @@
                 xcodeDirectory);
         }
 
-        public async Task<EnvironmentForSdkUsage> EnsureSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
+        public async Task<EnvironmentForSdkUsage> GetRuntimeEnvironmentForSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
         {
             // Accept the Xcode license agreement on this machine.
             await _processExecutor.ExecuteAsync(

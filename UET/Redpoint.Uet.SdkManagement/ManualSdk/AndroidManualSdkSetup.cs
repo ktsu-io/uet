@@ -12,13 +12,13 @@
     using System.Threading.Tasks;
 
     [SupportedOSPlatform("windows")]
-    public class AndroidSdkSetup : ISdkSetup
+    public class AndroidManualSdkSetup : IManualSdkSetup
     {
-        private readonly ILogger<AndroidSdkSetup> _logger;
+        private readonly ILogger<AndroidManualSdkSetup> _logger;
         private readonly IProcessExecutor _processExecutor;
 
-        public AndroidSdkSetup(
-            ILogger<AndroidSdkSetup> logger,
+        public AndroidManualSdkSetup(
+            ILogger<AndroidManualSdkSetup> logger,
             IProcessExecutor processExecutor)
         {
             _logger = logger;
@@ -30,7 +30,7 @@
         private const string _jdkVersion = "jdk-11.0.19+7";
         private const string _jdkDownloadUrl = "https://aka.ms/download-jdk/microsoft-jdk-11.0.19-windows-x64.zip";
 
-        public string PlatformName => "Android";
+        public string[] PlatformNames => new[] { "Android" };
 
         private static ConcurrentDictionary<string, Assembly> _cachedCompiles = new ConcurrentDictionary<string, Assembly>();
 
@@ -174,7 +174,7 @@
             File.WriteAllText(Path.Combine(sdkPackagePath, "jre-version.txt"), _jdkVersion);
         }
 
-        public Task<EnvironmentForSdkUsage> EnsureSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
+        public Task<EnvironmentForSdkUsage> GetRuntimeEnvironmentForSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
         {
             var ndkVersion = File.ReadAllText(Path.Combine(sdkPackagePath, "ndk-version.txt")).Trim();
             var jreVersion = File.ReadAllText(Path.Combine(sdkPackagePath, "jre-version.txt")).Trim();

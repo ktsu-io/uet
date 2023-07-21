@@ -77,13 +77,13 @@ rootCommand.SetHandler(async (InvocationContext context) =>
     services.AddProgressMonitor();
     if (OperatingSystem.IsMacOS())
     {
-        services.AddSingleton<MacSdkSetup, MacSdkSetup>();
+        services.AddSingleton<MacManualSdkSetup, MacManualSdkSetup>();
     }
     if (OperatingSystem.IsWindows())
     {
-        services.AddSingleton<AndroidSdkSetup, AndroidSdkSetup>();
-        services.AddSingleton<WindowsSdkSetup, WindowsSdkSetup>();
-        services.AddSingleton<LinuxSdkSetup, LinuxSdkSetup>();
+        services.AddSingleton<AndroidManualSdkSetup, AndroidManualSdkSetup>();
+        services.AddSingleton<WindowsAutoSdkSetup, WindowsAutoSdkSetup>();
+        services.AddSingleton<LinuxManualSdkSetup, LinuxManualSdkSetup>();
     }
 
     var serviceProvider = services.BuildServiceProvider();
@@ -94,25 +94,25 @@ rootCommand.SetHandler(async (InvocationContext context) =>
         case "Mac":
             if (OperatingSystem.IsMacOS())
             {
-                setup = serviceProvider.GetRequiredService<MacSdkSetup>();
+                setup = serviceProvider.GetRequiredService<MacManualSdkSetup>();
             }
             break;
         case "Android":
             if (OperatingSystem.IsWindows())
             {
-                setup = serviceProvider.GetRequiredService<AndroidSdkSetup>();
+                setup = serviceProvider.GetRequiredService<AndroidManualSdkSetup>();
             }
             break;
         case "Windows":
             if (OperatingSystem.IsWindows())
             {
-                setup = serviceProvider.GetRequiredService<WindowsSdkSetup>();
+                setup = serviceProvider.GetRequiredService<WindowsAutoSdkSetup>();
             }
             break;
         case "Linux":
             if (OperatingSystem.IsWindows())
             {
-                setup = serviceProvider.GetRequiredService<LinuxSdkSetup>();
+                setup = serviceProvider.GetRequiredService<LinuxManualSdkSetup>();
             }
             break;
         default:

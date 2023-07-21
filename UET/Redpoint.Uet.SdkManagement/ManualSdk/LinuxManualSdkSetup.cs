@@ -12,14 +12,14 @@
     using System.Text.RegularExpressions;
 
     [SupportedOSPlatform("windows")]
-    public class LinuxSdkSetup : ISdkSetup
+    public class LinuxManualSdkSetup : IManualSdkSetup
     {
-        private readonly ILogger<LinuxSdkSetup> _logger;
+        private readonly ILogger<LinuxManualSdkSetup> _logger;
         private readonly IProcessExecutor _processExecutor;
         private readonly ISimpleDownloadProgress _simpleDownloadProgress;
 
-        public LinuxSdkSetup(
-            ILogger<LinuxSdkSetup> logger,
+        public LinuxManualSdkSetup(
+            ILogger<LinuxManualSdkSetup> logger,
             IProcessExecutor processExecutor,
             ISimpleDownloadProgress simpleDownloadProgress)
         {
@@ -28,7 +28,7 @@
             _simpleDownloadProgress = simpleDownloadProgress;
         }
 
-        public string PlatformName => "Linux";
+        public string[] PlatformNames => new[] { "Linux" };
 
         internal static Task<string> ParseClangToolchainVersion(string linuxPlatformSdk)
         {
@@ -104,7 +104,7 @@
             File.Delete(Path.Combine(sdkPackagePath, "toolchainextract.exe"));
         }
 
-        public Task<EnvironmentForSdkUsage> EnsureSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
+        public Task<EnvironmentForSdkUsage> GetRuntimeEnvironmentForSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
         {
             return Task.FromResult(new EnvironmentForSdkUsage
             {

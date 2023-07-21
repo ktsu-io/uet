@@ -1,7 +1,6 @@
 ﻿namespace Redpoint.Uet.SdkManagement
 {
     using Microsoft.Extensions.Logging;
-    using Microsoft.Win32;
     using Redpoint.ProcessExecution;
     using Redpoint.Registry;
     using Redpoint.Uet.Core;
@@ -13,28 +12,30 @@
     using System.Threading.Tasks;
 
     [SupportedOSPlatform("windows")]
-    public class ConfidentialSdkSetup : ISdkSetup
+    public abstract class ConfidentialSdkSetup : ISdkSetup
     {
-        private readonly ConfidentialPlatformConfig _config;
+        protected readonly ConfidentialPlatformConfig _config;
         private readonly IProcessExecutor _processExecutor;
-        private readonly ILogger<ConfidentialSdkSetup> _logger;
+        private readonly ILogger _logger;
         private readonly IStringUtilities _stringUtilities;
 
         public ConfidentialSdkSetup(
             string platformName,
             ConfidentialPlatformConfig config,
             IProcessExecutor processExecutor,
-            ILogger<ConfidentialSdkSetup> logger,
+            ILogger logger,
             IStringUtilities stringUtilities)
         {
-            PlatformName = platformName;
+            PlatformNames = new[] { platformName };
             _config = config;
             _processExecutor = processExecutor;
             _logger = logger;
             _stringUtilities = stringUtilities;
         }
 
-        public string PlatformName { get; }
+        public string[] PlatformNames { get; }
+
+        public string CommonPlatformNameForPackageId => _config.CommonPlatformName ?? PlatformNames[0];
 
         public Task<string> ComputeSdkPackageId(string unrealEnginePath, CancellationToken cancellationToken)
         {
@@ -186,14 +187,6 @@
                     }
                 }
             }
-        }
-
-        public Task<EnvironmentForSdkUsage> EnsureSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new EnvironmentForSdkUsage
-            {
-                EnvironmentVariables = _config.EnvironmentVariables ?? new Dictionary<string, string>(),
-            });
         }
     }
 }

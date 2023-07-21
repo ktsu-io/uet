@@ -9,7 +9,7 @@ namespace Redpoint.Uet.SdkManagement.Tests
         [SupportedOSPlatform("macos")]
         public async Task CanParseVersions()
         {
-            var xcodeVersion = await MacSdkSetup.ParseXcodeVersion(@"
+            var xcodeVersion = await MacManualSdkSetup.ParseXcodeVersion(@"
 namespace TestNamespace
 {
 	internal class TestClass

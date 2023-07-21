@@ -20,14 +20,14 @@
     using System.Web;
 
     [SupportedOSPlatform("windows")]
-    public class WindowsSdkSetup : ISdkSetup
+    public class WindowsAutoSdkSetup : IAutoSdkSetup
     {
-        private readonly ILogger<WindowsSdkSetup> _logger;
+        private readonly ILogger<WindowsAutoSdkSetup> _logger;
         private readonly IProcessExecutor _processExecutor;
         private readonly ISimpleDownloadProgress _simpleDownloadProgress;
 
-        public WindowsSdkSetup(
-            ILogger<WindowsSdkSetup> logger,
+        public WindowsAutoSdkSetup(
+            ILogger<WindowsAutoSdkSetup> logger,
             IProcessExecutor processExecutor,
             ISimpleDownloadProgress simpleDownloadProgress)
         {
@@ -36,7 +36,7 @@
             _simpleDownloadProgress = simpleDownloadProgress;
         }
 
-        public string PlatformName => "Windows";
+        public string[] PlatformNames => new[] { "Windows", "Win64" };
 
         private static ConcurrentDictionary<string, Assembly> _cachedCompiles = new ConcurrentDictionary<string, Assembly>();
 
@@ -707,6 +707,19 @@
             await DirectoryAsync.DeleteAsync(Path.Combine(sdkPackagePath, "__Installers"), true);
         }
 
+        public Task<AutoSdkMapping[]> GetAutoSdkMappingsForSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(new[]
+            {
+                new AutoSdkMapping
+                {
+                    RelativePathInsideAutoSdkPath = "Win64",
+                    RelativePathInsideSdkPackagePath = ".",
+                }
+            });
+        }
+
+        /*
         public Task<EnvironmentForSdkUsage> EnsureSdkPackage(string sdkPackagePath, CancellationToken cancellationToken)
         {
             var rawEnvs = JsonSerializer.Deserialize(File.ReadAllText(Path.Combine(sdkPackagePath, "envs.json")), VisualStudioJsonSerializerContext.Default.DictionaryStringString)!;
@@ -742,5 +755,6 @@
                 EnvironmentVariables = newEnvs,
             });
         }
+        */
     }
 }
