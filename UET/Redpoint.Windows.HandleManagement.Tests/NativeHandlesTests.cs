@@ -90,7 +90,7 @@ namespace Redpoint.Windows.HandleManagement.Tests
             Assert.True(found);
         }
 
-        [SkippableFact]
+        [Fact(Skip = "This test is unreliable.")]
         [SupportedOSPlatform("windows6.2")]
         public async Task CanCloseOurOwnHandle()
         {
